@@ -63,6 +63,11 @@ MSG
       assert matcher.matches?(target_dir), matcher.failure_message
     end
 
+    def test_same_text_files_with_trailing_newline
+      @case_directory = "test/cases/same_text_files_with_trailing_newline"
+      assert matcher.matches?(target_dir), matcher.failure_message
+    end
+
     def test_different_binary_files
       skip_rubinius_string_strip
       @case_directory = "test/cases/different_binary_files"
