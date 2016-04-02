@@ -46,18 +46,18 @@ module AssertDirsEqual
     def assert_equal_content(expected, target)
       return true if File.directory?(expected) && File.directory?(target)
 
-      expected_content = File.read(expected).strip
-      target_content = File.read(target).strip
+      expected_content = File.read(expected)
+      target_content = File.read(target)
+
+      expected_content = expected_content.strip
+      target_content = target_content.strip
 
       expected_content == target_content || fail_with(
         "expected #{target.inspect} to have same content as #{expected.inspect}:\n#{Diff.perform(expected_content, target_content)}"
       )
     rescue ArgumentError # strip on binary file
-      expected_size = File.size(expected)
-      target_size = File.size(target)
-
-      expected_size == target_size || fail_with(
-        "expected #{target.inspect} to be the same size as #{expected.inspect}"
+      expected_content == target_content || fail_with(
+        "expected #{target.inspect} to be the same as #{expected.inspect}"
       )
     end
 
