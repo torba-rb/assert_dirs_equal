@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = "assert_dirs_equal"
-  spec.version       = "0.1.0"
+  spec.version       = "0.1.1"
   spec.authors       = ["Andrii Malyshko"]
   spec.email         = ["mail@nashbridges.me"]
   spec.description   = "Test assertion for directories equality by tree and content comparison"
