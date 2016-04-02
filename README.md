@@ -58,6 +58,12 @@ end
 
 TODO
 
+## Known issues
+
+Due that Rubinius String#strip doesn't fail on binary data (undocumented behaviour), the library will
+try to actually diff binary files. Depending on your test framework's diffing tool, it may or may not
+be a problem. For example, Minitest is not affected, since it uses shell `diff` under the hood.
+
 ## Origin
 
 Extracted from [Torba][torba-github] library since it looks more like a standalone component.

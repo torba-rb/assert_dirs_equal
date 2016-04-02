@@ -64,17 +64,20 @@ MSG
     end
 
     def test_different_binary_files
+      skip_rubinius_string_strip
       @case_directory = "test/cases/different_binary_files"
       refute matcher.matches?(target_dir)
       assert_equal "expected \"#{target_dir}/file.png\" to be the same size as \"#{expected_dir}/file.png\"", matcher.failure_message
     end
 
     def test_same_binary_files
+      skip_rubinius_string_strip
       @case_directory = "test/cases/same_binary_files"
       assert matcher.matches?(target_dir), matcher.failure_message
     end
 
     def test_binary_and_text_files
+      skip_rubinius_string_strip
       @case_directory = "test/cases/binary_and_text_files"
       refute matcher.matches?(target_dir)
       assert_equal "expected \"#{target_dir}/file.txt\" to be the same size as \"#{expected_dir}/file.txt\"", matcher.failure_message
