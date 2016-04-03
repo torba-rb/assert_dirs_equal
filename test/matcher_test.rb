@@ -2,7 +2,7 @@ require "test_helper"
 require "assert_dirs_equal/matcher"
 
 module AssertDirsEqual
-  class MatcherTest < Minitest::Test
+  class MatcherEqTest < Minitest::Test
     def matcher
       @matcher ||= Matcher.new(expected_dir)
     end
@@ -98,6 +98,23 @@ MSG
       @case_directory = "test/cases/empty_dirs_are_equal"
       matcher.matches?(target_dir)
       assert_equal "expected \"#{target_dir}\" to not be equal to \"#{expected_dir}\", but they are equal", matcher.failure_message_when_negated
+    end
+  end
+
+  class MatcherIncludesTest < MatcherEqTest
+    def matcher
+      @matcher ||= Matcher.new(expected_dir, exact_match: false)
+    end
+
+    def test_extra_file_in_target
+      @case_directory = "test/cases/extra_file_in_target"
+      assert matcher.matches?(target_dir), matcher.failure_message
+    end
+
+    def test_failure_message_negated
+      @case_directory = "test/cases/empty_dirs_are_equal"
+      matcher.matches?(target_dir)
+      assert_equal "expected files from \"#{target_dir}\" to not be present in \"#{expected_dir}\", but they are", matcher.failure_message_when_negated
     end
   end
 end

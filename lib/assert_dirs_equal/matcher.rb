@@ -14,8 +14,9 @@ module AssertDirsEqual
     # @return [String]
     attr_reader :failure_message
 
-    def initialize(expected)
+    def initialize(expected, options = {})
       @expected = expected
+      @exact_match = options.fetch(:exact_match, true)
     end
 
     # @return [true] if `target` mirrors subdirectory of `expected` directory.
@@ -30,7 +31,11 @@ module AssertDirsEqual
 
     # @return [String]
     def failure_message_when_negated
-      "expected #{@target.inspect} to not be equal to #{@expected.inspect}, but they are equal"
+      if @exact_match
+        "expected #{@target.inspect} to not be equal to #{@expected.inspect}, but they are equal"
+      else
+        "expected files from #{@target.inspect} to not be present in #{@expected.inspect}, but they are"
+      end
     end
 
     private
@@ -69,6 +74,8 @@ module AssertDirsEqual
     end
 
     def refute_extra_files_in_target
+      return true unless @exact_match
+
       expected_files = both_paths_in(@expected, @target).map { |pair| pair[1] }
       actual_expected_files = Dir.glob(File.join(@target, "**/*"))
       diff = actual_expected_files - expected_files
