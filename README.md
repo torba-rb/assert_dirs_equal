@@ -12,7 +12,7 @@ Production ready.
 
 ## Documentation
 
-[Released version](http://rubydoc.info/gems/assert_dirs_equal/0.1.1)
+[Released version](http://rubydoc.info/gems/assert_dirs_equal/0.2.0)
 
 ## Why
 

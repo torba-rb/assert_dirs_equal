@@ -40,7 +40,7 @@ class Minitest::Test
   #
   # @param (see #assert_dirs_equal)
   # @raise [Minitest::Assertion]
-  # @since unreleased
+  # @since 0.2.0
   def assert_dir_included(expected, target)
     matcher = AssertDirsEqual::Matcher.new(expected, exact_match: false)
     assert matcher.matches?(target), matcher.failure_message
@@ -50,7 +50,7 @@ class Minitest::Test
   # @note Extra files in `target` are ignored.
   #
   # @param (see #assert_dirs_equal)
-  # @since unreleased
+  # @since 0.2.0
   def refute_dir_included(expected, target)
     matcher = AssertDirsEqual::Matcher.new(expected, exact_match: false)
     refute matcher.matches?(target), matcher.failure_message_when_negated

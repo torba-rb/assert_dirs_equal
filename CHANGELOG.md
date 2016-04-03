@@ -1,5 +1,7 @@
 ## Unreleased
 
+### 0.2.0
+
 ### Enhancements
 
 * Allow to compare dirs without exact match (i.e. there can be other files and directories inside
