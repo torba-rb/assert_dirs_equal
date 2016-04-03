@@ -14,13 +14,21 @@ module AssertDirsEqual
     # @return [String]
     attr_reader :failure_message
 
+    # @param [String] expected path to a directory which contains expected structure and content.
+    # @param [Hash] options
+    # @option options [Boolean] exact_match (true) specifies whether `expected` should mirror `target`,
+    #   or just be a subset of it.
     def initialize(expected, options = {})
       @expected = expected
       @exact_match = options.fetch(:exact_match, true)
     end
 
-    # @return [true] if `target` mirrors subdirectory of `expected` directory.
-    # @return [false] if `target` lacks some files, or has extra files, or any file in subdirectory differs from according file content.
+    # @param [String] target path to a directory which contains result of executing a method under test.
+    # @return [true] when `exact_match` is true and `target` mirrors `expected` directory.
+    # @return [true] when `exact_match` is false and `target` contains all files from `expected` directory.
+    #   Extra files in `target` does not affect the result.
+    # @return [false] if `target` lacks some files, or has extra files (when `exact_match` is true), or any
+    #   file in subdirectory differs from according file content.
     def matches?(target)
       @target = target
       assert_exists(@expected) && assert_exists(@target) &&
@@ -29,6 +37,7 @@ module AssertDirsEqual
         refute_extra_files_in_target
     end
 
+    # @!attribute [r]
     # @return [String]
     def failure_message_when_negated
       if @exact_match
