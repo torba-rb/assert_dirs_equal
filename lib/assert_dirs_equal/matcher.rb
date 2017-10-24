@@ -1,3 +1,5 @@
+require "cgi"
+
 # @since 0.1.0
 module AssertDirsEqual
   class Diff
@@ -23,6 +25,21 @@ module AssertDirsEqual
       @exact_match = options.fetch(:exact_match, true)
     end
 
+    # Takes each file that exists in `expected` directory and expects to find exactly the same (by name and
+    # by content) file in `target` directory.
+    #
+    # Since -unreleased- you can use {https://ruby-doc.org/core-2.2.3/Dir.html#method-c-glob glob patterns} in a filename.
+    # This is handy, for example, than you match fingerprinted files and don't want to deal with fingerprinting
+    # algorithm. Pattern should be {https://en.wikipedia.org/wiki/Percent-encoding percent-encoded}. Make sure it is
+    # strict enough to match only one file in `target` directory.
+    #
+    # @example Using percent-encoded glob patterns in filenames (file*.txt)
+    #     expected\
+    #       file%2A.txt
+    #
+    #     target\
+    #       file_that_will_be_matched.txt
+    #
     # @param [String] target path to a directory which contains result of executing a method under test.
     # @return [true] when `exact_match` is true and `target` mirrors `expected` directory.
     # @return [true] when `exact_match` is false and `target` contains all files from `expected` directory.
@@ -49,8 +66,19 @@ module AssertDirsEqual
 
     private
 
+    def first_with_glob(path)
+      Dir.glob(path).first
+    end
+
     def assert_exists(path, msg = nil)
-      File.exist?(path) || fail_with(msg || "expected #{path.inspect} to exist")
+      actual_paths = Dir.glob(path)
+
+      case actual_paths.size
+      when 0 then fail_with(msg || "expected #{path.inspect} to exist")
+      when 1 then true
+      else
+        fail_with("found multiple matches for #{path.inspect}, should be just one of the following #{actual_paths.map(&:inspect).join(", ")}")
+      end
     end
 
     def assert_directory(directory)
@@ -61,7 +89,7 @@ module AssertDirsEqual
       return true if File.directory?(expected) && File.directory?(target)
 
       expected_content = File.read(expected)
-      target_content = File.read(target)
+      target_content = File.read(first_with_glob(target))
 
       expected_content = expected_content.strip
       target_content = target_content.strip
@@ -85,7 +113,7 @@ module AssertDirsEqual
     def refute_extra_files_in_target
       return true unless @exact_match
 
-      expected_files = both_paths_in(@expected, @target).map { |pair| pair[1] }
+      expected_files = both_paths_in(@expected, @target).map { |(_, target_path)| first_with_glob(target_path) }
       actual_expected_files = Dir.glob(File.join(@target, "**/*"))
       diff = actual_expected_files - expected_files
       diff.empty? || fail_with("found unexpected files #{diff.inspect}")
@@ -101,7 +129,7 @@ module AssertDirsEqual
         glob = File.join(expected, "**/*")
         Dir.glob(glob).each do |expected_full_path|
           path = expected_full_path.sub(expected, "")
-          target_full_path = File.join(target, path)
+          target_full_path = File.join(target, CGI.unescape(path))
           y << [expected_full_path, target_full_path]
         end
       end

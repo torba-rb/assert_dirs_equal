@@ -99,6 +99,23 @@ MSG
       matcher.matches?(target_dir)
       assert_equal "expected \"#{target_dir}\" to not be equal to \"#{expected_dir}\", but they are equal", matcher.failure_message_when_negated
     end
+
+    def test_glob_filename_matches_exactly_once
+      @case_directory = "test/cases/glob_filename_matches_exactly_once"
+      assert matcher.matches?(target_dir), matcher.failure_message
+    end
+
+    def test_glob_filename_matches_more_than_once
+      @case_directory = "test/cases/glob_filename_matches_more_than_once"
+      refute matcher.matches?(target_dir)
+      assert_equal "found multiple matches for \"#{target_dir}/{one,two}.txt\", should be just one of the following \"#{target_dir}/one.txt\", \"#{target_dir}/two.txt\"", matcher.failure_message
+    end
+
+    def test_glob_filename_missing_file
+      @case_directory = "test/cases/glob_filename_missing_file"
+      refute matcher.matches?(target_dir)
+      assert_equal "expected \"#{target_dir}/{one,two}.txt\" to exist since \"#{expected_dir}/%7Bone%2Ctwo%7D.txt\" exists", matcher.failure_message
+    end
   end
 
   class MatcherIncludesTest < MatcherEqTest

@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Enhancements
+
+* Allow to provide glob patterns in file names
+
 ### 0.2.0
 
 ### Enhancements
