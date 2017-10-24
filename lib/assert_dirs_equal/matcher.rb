@@ -28,7 +28,7 @@ module AssertDirsEqual
     # Takes each file that exists in `expected` directory and expects to find exactly the same (by name and
     # by content) file in `target` directory.
     #
-    # Since -unreleased- you can use {https://ruby-doc.org/core-2.2.3/Dir.html#method-c-glob glob patterns} in a filename.
+    # Since 0.3.0 you can use {https://ruby-doc.org/core-2.2.3/Dir.html#method-c-glob glob patterns} in a filename.
     # This is handy, for example, than you match fingerprinted files and don't want to deal with fingerprinting
     # algorithm. Pattern should be {https://en.wikipedia.org/wiki/Percent-encoding percent-encoded}. Make sure it is
     # strict enough to match only one file in `target` directory.
